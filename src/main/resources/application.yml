@@ -1,0 +1,40 @@
+general:
+  kafka-topic: midas-transactions
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:${spring.embedded.kafka.brokers.property:9092}
+
+    # IMPORTANT: Kafka Admin Client default properties
+    properties:
+      request.timeout.ms: 60000
+      default.api.timeout.ms: 60000
+
+    consumer:
+      group-id: midas-core-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.jpmc.midascore.foundation.Transaction
+
+    # ⬇️ THIS IS THE CORRECT LOCATION FOR THE PRODUCER ⬇️
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  datasource:
+    url: jdbc:h2:mem:midasdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: 33400

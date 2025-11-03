@@ -23,19 +23,28 @@ class TaskTwoTests {
     @Test
     void task_two_verifier() throws InterruptedException {
         String[] transactionLines = fileLoader.loadStrings("/test_data/poiuytrewq.uiop");
+
+        logger.info("Loaded {} transaction lines", transactionLines.length);
+
+        // Log what's in the file
+        for (int i = 0; i < transactionLines.length; i++) {
+            logger.info("Line {}: {}", i, transactionLines[i]);
+        }
+
+        // Send transactions
         for (String transactionLine : transactionLines) {
+            logger.info("Sending to Kafka: {}", transactionLine);
             kafkaProducer.send(transactionLine);
         }
-        Thread.sleep(2000);
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("use your debugger to watch for incoming transactions");
-        logger.info("kill this test once you find the answer");
-        while (true) {
-            Thread.sleep(20000);
-            logger.info("...");
-        }
-    }
 
+        logger.info("----------------------------------------------------------");
+        logger.info("All transactions sent. Waiting for processing...");
+        logger.info("Check the logs above for transaction details!");
+        logger.info("----------------------------------------------------------");
+
+        // Wait long enough to see the transactions being processed
+        Thread.sleep(10000);
+
+        logger.info("Test completed - check the transaction logs above for the answer");
+    }
 }
